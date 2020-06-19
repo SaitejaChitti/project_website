@@ -21,5 +21,5 @@ urlpatterns = [
     path('',views.index,name="index"),
     path('admin/',views.admin,name="admin"),
     path('super_admin/',views.super_admin,name="super_admin"),
-    path('delete', views.delete_session,name="delete_session"),
+    path('delete/', views.delete_session,name="delete_session"),
 ]

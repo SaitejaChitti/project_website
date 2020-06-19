@@ -11,7 +11,7 @@
 		<div class="card" style="width: 18rem;">
   <div class="card-body">
     <h5 class="card-title">Super-Admin Login</h5>
-    <form action ="super_admin/" method="post">
+    <form action ="../super_admin/" method="post">
 
       {% csrf_token %}
   <div class="form-group">
@@ -42,7 +42,7 @@
 		<div class="card" style="width: 18rem;">
   <div class="card-body">
     <h5 class="card-title">Admin Login</h5>
-    <form action ="admin/" method="post">
+    <form action ="../admin/" method="post">
       {% csrf_token %}
   <div class="form-group">
     <label for="exampleInputEmail1">Name</label>
@@ -59,5 +59,6 @@
 </div>
 </div>
 </div>
+{{request.session.userid}}
 
 {% endblock %}

@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from club_admin import views
 
 urlpatterns = [
-    path('', include('club_admin.urls')),
+    path('',views.index,name="index"),
+    path('admin/',views.admin,name="admin"),
+    path('super_admin/',views.super_admin,name="super_admin"),
+    path('delete/', views.delete_session,name="delete_session"),
 ]
