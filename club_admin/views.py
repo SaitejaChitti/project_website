@@ -32,18 +32,26 @@ def admin(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def super_admin(request):
-    id=request.POST["name"]
-    pword=request.POST["pword"]
-    if (id in "100") &( pword in "cbit"): #static userid,password
-        return render(request,"super_admin.html")
+    if request.method == "POST":
+        id=request.POST["name"]
+        pword=request.POST["pword"]
+        if (id in "100") &( pword in "cbit"): #static userid,password
+            request.session['superuserid'] = id
+            return render(request,"super_admin.html")
+        else:
+            return redirect(index)
     else:
-        return redirect(index)
+        return render(request,"super_admin.html")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def viewadmin(request):
     response=requests.get('http://localhost:5000/adminlogin')
     data=response.json()
     admin={}
-    for i in data:
-        admin[i["clubname"]]=i["username"]
-    return render(request,"viewadmins.html",{'data':admin})
+    if "message" in data:
+        print(data)
+        return redirect(super_admin)
+    else:
+        for i in data:
+            admin[i['clubname']]=i['username']
+        return render(request,"viewadmins.html",{'data':admin})
