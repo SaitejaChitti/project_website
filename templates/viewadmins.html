@@ -36,13 +36,14 @@
 
     <div class="jumbotron" style=" margin-right: 200px; margin-left: 200px; margin-top: 100px;">
     	<div class="container text-center">
-    <center>
-    <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Add a Club.</a><br><br>
-    <a class="btn btn-primary w-50" href="{% url 'viewadmin' %}" role="button" >Display all admins</a><br><br>
-    <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Show all clubs</a><br><br>
-    <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Delete a Club.</a><br><br>
-    <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Check out a specific club</a><br><br>
-    </center>
+      <ol>
+      {% for k,v in data.items %}
+        <li>
+        <span class="btn btn-primary w-50">ClubName: {{k}}</span><br><br>
+        <span class="btn btn-primary w-50">Admin: {{v}}</span><br><br><br>
+        </li>
+      {% endfor %}
+      </ol>
     </div>
     </div>
     {% endblock%}

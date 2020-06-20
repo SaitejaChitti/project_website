@@ -38,3 +38,12 @@ def super_admin(request):
         return render(request,"super_admin.html")
     else:
         return redirect(index)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def viewadmin(request):
+    response=requests.get('http://localhost:5000/adminlogin')
+    data=response.json()
+    admin={}
+    for i in data:
+        admin[i["clubname"]]=i["username"]
+    return render(request,"viewadmins.html",{'data':admin})
