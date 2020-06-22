@@ -28,8 +28,8 @@
               <a class="dropdown-item" href="#">Something else here</a>
             </div>
           </li>
-        <form class="form-inline my-2 my-lg-0 action=" action="{% url 'delete_session' %}">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+        <form class="form-inline my-2 my-lg-0 action=" action="{% url 'delete_session' %}" >
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value="slogout" name="logout">Logout</button>
         </form>
       </div>
     </nav>
@@ -45,4 +45,5 @@
     </center>
     </div>
     </div>
+    
     {% endblock%}

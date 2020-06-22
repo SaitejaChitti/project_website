@@ -36,13 +36,9 @@
 
     <div class="jumbotron" style=" margin-right: 200px; margin-left: 200px; margin-top: 100px;">
     	<div class="container text-center">
-      <ol>
       {% for k,v in data.items %}
-        <li>
-        <span class="btn btn-primary w-50">ClubName: {{k}} <br> Admin: {{v}}</span><br><br>
-        </li>
+        <span class="btn btn-primary w-50">ClubName: {{k}}<br> Admin:{{v}}</span><br><br>
       {% endfor %}
-      </ol>
     </div>
     </div>
     {% endblock%}

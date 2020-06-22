@@ -28,18 +28,17 @@
               <a class="dropdown-item" href="#">Something else here</a>
             </div>
           </li>
-        <form class="form-inline my-2 my-lg-0" action="../delete">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+        <form class="form-inline my-2 my-lg-0" action="{% url 'delete_session' %}" name="admin">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="logout" value="alogout">Logout</button>
         </form>
       </div>
     </nav>
-    {{user}}
-    {{request.session.items}}
+  
     <div class="jumbotron" style=" margin-right: 200px; margin-left: 200px; margin-top: 100px;">
     	<div class="container text-center">
     <center>
     <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Accept Joining Requests.</a><br><br>
-    <a class="btn btn-primary w-50" href="" role="button" >Display all members</a><br><br>
+    <a class="btn btn-primary w-50" href="{% url 'viewadmin' %}" role="button" >Display all members</a><br><br>
     <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Show all events</a><br><br>
     <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Delete a member.</a><br><br>
     <a class="btn btn-primary w-50" href="http://www.google.com" role="button" >Check out a specific member</a><br><br>
