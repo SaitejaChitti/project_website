@@ -5,7 +5,7 @@
 {%endblock%}
 {%block body%}
 
-
+<a class="btn btn-primary " href="{% url 'index'  %}" style="position: absolute;left:2%;top:1%" role="button" >Back</a>
 <div class="card" style="width: 18rem;align-items: center;position:absolute;left:41%">
 <div class="card-body" id="admin" >
 <h5 class="card-title">Admin Login</h5>
@@ -25,6 +25,6 @@
 </div>
 {% if alert %}
       <p style="text-align: center;">Invalid Credentials</p>
-      {% endif %}
+{% endif %}
 
 {% endblock%}
