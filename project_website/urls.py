@@ -30,4 +30,7 @@ urlpatterns = [
         path('confirmdelete/',views.confirmdelete,name="confirmdelete"),
         path('checkclub/',views.checkclub,name="checkclub"),
         path('checkoutclub/',views.checkoutclub,name="checkoutclub"),
+        path('forget/',views.forgetpassword,name="forgetpassword"),
+        path('reset/',views.reset,name="reset"),
+        path('reset/changepassword/',views.changepassword,name="changepassword")
 ]

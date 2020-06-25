@@ -6,7 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponse
 import requests
+import random
+import math
 from password_generator import PasswordGenerator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 # Create your views here.
 alert = 0
@@ -69,7 +74,7 @@ def admin(request):
     try:
         id=request.POST["id"]
         pword=request.POST["pword"]
-        response = requests.post('http://localhost:5000/adminlog',data={'username':id,'password':pword})
+        response = requests.post('http://localhost:5000/adminlog',data={'userid':id,'password':pword})
         result = response.json()
         print(result)
         try:
@@ -211,3 +216,36 @@ def checkoutclub(request):
         data[i] = d
     print(data)
     return render(request,'checkoutclub.html',{'data':data,'club':club_name,'admin':admin_name})
+def generateOTP() :
+    string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    OTP = ""
+    length = len(string)
+    for i in range(6) :
+        OTP += string[math.floor(random.random() * length)]
+    return OTP
+
+def forgetpassword(request):
+    global admintoken
+    otp=generateOTP()
+    adminid=request.session['userid']
+    response = requests.post('http://localhost:5000/forgetpassword',data={'userid':adminid,'otp':otp},headers = {'Authorization':f'Bearer {admintoken}'})
+    admin_emailid=response.json()
+    if 'message' not in admin_emailid:
+        subject="Change your Password"
+        html_message = render_to_string('mail_template.html', {'otp': otp,'link':'http://localhost:8000/reset/'})
+        plain_message = strip_tags(html_message)
+        from_email = 'saitejach096@gmail.com'
+        to = admin_emailid[0]['emailid']
+        send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
+        return HttpResponse("Success")
+    else:
+        return HttpResponse(admin_emailid['message'])
+def reset(request):
+    return render(request,'ResetPassword.html')
+def changepassword(request):
+    otp=request.GET.get('otp')
+    password=request.GET.get('pword')
+    print(otp,password)
+    response=requests.post('http://localhost:5000/changepassword',data={'otp':otp,'password':password})
+    result=response.json()
+    return HttpResponse(result['message'])
