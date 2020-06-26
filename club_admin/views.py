@@ -249,3 +249,13 @@ def changepassword(request):
     response=requests.post('http://localhost:5000/changepassword',data={'otp':otp,'password':password})
     result=response.json()
     return HttpResponse(result['message'])
+def edit(request):
+    admin_name=request.GET.get("admin_name")
+    return render(request,'edit.html',{'oldadmin':admin_name})
+def editadmin(request):
+    global sadmintoken
+    admin_name=request.GET.get("admin_name")
+    newadminid=request.GET.get("id")
+    response = requests.post('http://localhost:5000/editadmin',data={'admin_name':admin_name,'newadminid':newadminid},headers = {'Authorization':f'Bearer {sadmintoken}'})
+    response=response.json()
+    return HttpResponse(response['message'])
