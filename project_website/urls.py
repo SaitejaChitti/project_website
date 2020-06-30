@@ -44,6 +44,7 @@ urlpatterns = [
     path('members/',views.members,name="members"),
     path('deletemembers/',views.deletemembers,name="deletemembers"),
     path('deletemembers/confirmdelmembers',views.confirmdelmembers,name="confirmdelmembers"),
-    path('events/',views.events,name = "events")
+    path('events/',views.events,name = "events"),
+    path('participants/',views.participants,name="participants"),
 
 ]

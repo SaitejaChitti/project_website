@@ -27,7 +27,7 @@ global admintoken
 global params
 @never_cache
 def delete_session(request):
-    
+
     d = request.GET.get("logout")
     if(d == 'slogout'):
 
@@ -36,15 +36,15 @@ def delete_session(request):
             del request.session['suserid']
             del request.session['spassword']
             logout(request)
-            
+
             return redirect(index)
         except:
             logout(request)
-            
+
             return redirect(index)
     else:
         try:
-            
+
             del request.session['userid']
             del request.session['password']
             club=''
@@ -52,11 +52,11 @@ def delete_session(request):
             del request.session['club']
             del request.session['ids']
             logout(request)
-            
+
             return redirect(index)
         except:
             logout(request)
-            
+
             return redirect(index)
 @never_cache
 def index(request):
@@ -65,13 +65,13 @@ def index(request):
     global delsuper
     #print(alert)
     #print('hello')
-    
+
     try:
         a=request.session['suserid']
         b=request.session['spassword']
-        
+
         return redirect(super_admin)
-        
+
     except:
         #print('hi')
         response=requests.get('http://localhost:5000/clubnames')
@@ -80,7 +80,7 @@ def index(request):
         clubs=[]
         for i in club_names:
             clubs.append(i['clubname'])
-            
+
         if(flag==1):
             alert = 1
             flag = 0
@@ -93,10 +93,10 @@ def super_admin(request):
     global alert
     global flag
     global sadmintoken
-    try:                        
-        
+    try:
+
         id2=request.session['suserid']
-            
+
         s = sadmintoken
         return render(request,'super_admin.html')
     except:
@@ -108,7 +108,7 @@ def super_admin(request):
             result = response.json()
             try:
                 sadmintoken = result['access_token']
-                print(sadmintoken)
+                #print(sadmintoken)
                 request.session['suserid'] =id
                 request.session['spassword']=pword
                 alert = 0
@@ -129,13 +129,13 @@ def super_admin(request):
                 return render(request,'super_admin.html')
             except:
                 return redirect(index)
-                    
-     
+
+
 
 
 @never_cache
 def adminlog(request):
-    
+
     global alert2
     global flag2
     global deleteadmin
@@ -150,7 +150,7 @@ def adminlog(request):
         flag2 = 0
     else:
         alert2 = 0
-    
+
     return render(request,'admin2.html',{'alert':alert2,'club':club})
 
 @never_cache
@@ -162,25 +162,21 @@ def admin(request):
     try:
         id3 = request.session['userid']
         a = admintoken
-        print('hello')
         return render(request,'admin.html')
     except:
-        print('fkjd')
         if(request.method=='POST'):
-            
+
             aid = int(request.POST["id"])
             apword = request.POST["pword"]
             club = request.POST["club_name"]
-            
-            #print(club)
             response  = requests.post('http://localhost:5000/adminlog',data={'userid':aid,'password':apword,'clubname':club})
-            #print(response)
             result = response.json()
             #print(result)
+
             try:
 
                 admintoken=result['access_token']
-                print('hi')    
+                print('hi')
                 request.session['userid'] =aid
                 request.session['password']=apword
                 request.session['club']=club
@@ -203,16 +199,19 @@ def viewadmin(request):
     if(request.session['suserid']):
         response=requests.get('http://localhost:5000/adminlogin',headers = {'Authorization':f'Bearer {sadmintoken}'})
         data=response.json()
-        admin={}
-        for i in data:
-            admin[i["clubname"]]=i["username"]
-        return render(request,"viewadmins.html",{'data':admin})
+        if 'message' not in data:
+            admin={}
+            for i in data:
+                admin[i["clubname"]]=i["username"]
+            return render(request,"viewadmins.html",{'data':admin})
+        else:
+            return HttpResponse(data['message'])
     else:
         return redirect(index)
 
 
 
-    
+
 @never_cache
 def addadmins(request):
     global sadmintoken
@@ -223,10 +222,7 @@ def addadmins(request):
         cname=request.POST["cname"]
         pwo=PasswordGenerator()
         pword=pwo.generate()
-        
         params = dict(uid=id,username=name,password=pword,clubname=cname)
-        print(sadmintoken)
-        print(params)
         response=requests.post('http://localhost:5000/addclub',data=params,headers ={'Authorization':f'Bearer {sadmintoken}'})
         #print(response)
         if 'message' not in response:
@@ -235,11 +231,10 @@ def addadmins(request):
             return HttpResponse(response['message'])
     else:
         return redirect(index)
-    
+
 @never_cache
 def addadmin(request):
     if(request.session['suserid']):
-
         return render(request,'addadmin.html')
     else:
         return redirect(index)
@@ -249,7 +244,7 @@ def mailadmin(request):
     global sadmintoken
     global params
     param=params
-    print(param)
+    #print(param)
     response = requests.get('http://localhost:5000/mail',data={'userid':param['uid']},headers = {'Authorization':f'Bearer {sadmintoken}'})
     admin_emailid=response.json()
     if 'message' not in admin_emailid:
@@ -270,10 +265,13 @@ def deladmin(request):
         global sadmintoken
         response=requests.get('http://localhost:5000/adminlogin',headers = {'Authorization':f'Bearer {sadmintoken}'})
         data=response.json()
-        admin={}
-        for i in data:
-            admin[i["clubname"]]=i["username"]
-        return render(request,'deleteadmin.html',{'data':admin})
+        if 'message' not in data:
+            admin={}
+            for i in data:
+                admin[i["clubname"]]=i["username"]
+            return render(request,'deleteadmin.html',{'data':admin})
+        else:
+            return HttpResponse(data['message'])
     else:
         return redirect(index)
 
@@ -287,28 +285,31 @@ def deleteadmin(request):
         response = requests.post('http://localhost:5000/clubmembers',data={'clubname':club_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
         data = response.json()
         #print(data)
-        for i in range(0,len(data)):
-            d=dict()
-            d['stuid']=data[i]['stuid']
-            d['name']=data[i]['name']
-            d['branch']=data[i]['branch']
-            d['crole']=data[i]['crole']
-            data[i] = d
-        #print(data)
-        return render(request,'confirmdelete.html',{'data':data,'club':club_name,'admin':admin_name})
+        if 'message' not in data:
+            for i in range(0,len(data)):
+                d=dict()
+                d['stuid']=data[i]['stuid']
+                d['name']=data[i]['name']
+                d['branch']=data[i]['branch']
+                d['crole']=data[i]['crole']
+                data[i] = d
+            #print(data)
+            return render(request,'confirmdelete.html',{'data':data,'club':club_name,'admin':admin_name})
+        else:
+            return HttpResponse(data['message'])
     else:
         return redirect(index)
 @never_cache
 def confirmdelete(request):
     if(request.session['suserid']):
 
-        
+
         admin_name =request.GET.get("admin_name")
         global sadmintoken
         response = requests.post('http://localhost:5000/del',data={'username':admin_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
         response=response.json()
         if (response['message']=="deleted"):
-            print('message received')
+            #print('message received')
             response = requests.get('http://localhost:5000/mail',data={'username':admin_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
             admin_emailid=response.json()
             if 'message' not in admin_emailid:
@@ -357,7 +358,7 @@ def reset(request):
 def changepassword(request):
     otp=request.GET.get('otp')
     password=request.GET.get('pword')
-    print(otp,password)
+    #print(otp,password)
     response=requests.post('http://localhost:5000/changepassword',data={'otp':otp,'password':password})
     result=response.json()
     return HttpResponse(result['message'])
@@ -366,10 +367,13 @@ def checkclub(request):
     global sadmintoken
     response=requests.get('http://localhost:5000/adminlogin',headers = {'Authorization':f'Bearer {sadmintoken}'})
     data=response.json()
-    admin={}
-    for i in data:
-        admin[i["clubname"]]=i["username"]
-    return render(request,'checkclub.html',{'data':admin})
+    if 'message' not in data:
+        admin={}
+        for i in data:
+            admin[i["clubname"]]=i["username"]
+        return render(request,'checkclub.html',{'data':admin})
+    else:
+        return HttpResponse(data['message'])
 @never_cache
 def checkoutclub(request):
     admin_name=request.GET.get("admin_name")
@@ -377,16 +381,18 @@ def checkoutclub(request):
     global sadmintoken
     response = requests.post('http://localhost:5000/clubmembers',data={'clubname':club_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
     data = response.json()
-    for i in range(0,len(data)):
-        d=dict()
-        d['stuid']=data[i]['stuid']
-        d['name']=data[i]['name']
-        d['branch']=data[i]['branch']
-        d['crole']=data[i]['crole']
-        data[i] = d
-    print(data)
-    return render(request,'checkoutclub.html',{'data':data,'club':club_name,'admin':admin_name})
-
+    if 'message' not in data:
+        for i in range(0,len(data)):
+            d=dict()
+            d['stuid']=data[i]['stuid']
+            d['name']=data[i]['name']
+            d['branch']=data[i]['branch']
+            d['crole']=data[i]['crole']
+            data[i] = d
+        #print(data)
+        return render(request,'checkoutclub.html',{'data':data,'club':club_name,'admin':admin_name})
+    else:
+        return HttpResponse(data['message'])
 @never_cache
 def edit(request):
     admin_name=request.GET.get("admin_name")
@@ -409,15 +415,17 @@ def viewrequests(request):
     response = requests.get('http://localhost:5000/requesttoclub',data={'clubname':club})
     data = response.json()
     #print(data)
-    checks = []
-    ids = []
+    if 'message' not in data:
+        checks = []
+        ids = []
 
-    for i in data:
-        checks.append(' Request from'+' '+i['name']+','+str(i['stuid'])+','+i['branch']+','+'year'+' '+str(i['year']))
-        ids.append(i['stuid'])
-    request.session['ids']=ids     
-    return render(request,'showrequests.html',{'club':club,'len':len(data),'packed':zip(checks,ids)})
-
+        for i in data:
+            checks.append(' Request from'+' '+i['name']+','+str(i['stuid'])+','+i['branch']+','+'year'+' '+str(i['year']))
+            ids.append(i['stuid'])
+        request.session['ids']=ids
+        return render(request,'showrequests.html',{'club':club,'len':len(data),'packed':zip(checks,ids)})
+    else:
+        return HttpResponse(data['message'])
 @never_cache
 def dealrequests(request):
     global admintoken
@@ -434,29 +442,33 @@ def dealrequests(request):
             acceptstatus=1
         else:
             acceptstatus=0
-        #print(acceptstatus) 
+        #print(acceptstatus)
         response=requests.post('http://localhost:5000/requesttoclub',data={'cid':0,'stuid':i,'clubname':club,'crole':'Member','acceptstatus':acceptstatus},headers = {'Authorization':f'Bearer {admintoken}'})
-        response = requests.get('http://localhost:5000/mail',data={'userid':i},headers = {'Authorization':f'Bearer {admintoken}'})
-        
-        admin_emailid = response.json()
-        if 'message' not in admin_emailid:
+        data=response.json()
+        if data is None:
 
-            subject="Congratulations you are added to "+club
-            html_message = render_to_string('mail_student.html', {'user':i,'clubname':club})
-            plain_message = strip_tags(html_message)
-            from_email = 'teamcosc555@gmail.com'
-            to = admin_emailid[0]['emailid']
+            response = requests.get('http://localhost:5000/mail',data={'userid':i},headers = {'Authorization':f'Bearer {admintoken}'})
 
-            send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
-            success=1
+            admin_emailid = response.json()
+            if 'message' not in admin_emailid:
+
+                subject="Congratulations you are added to "+club
+                html_message = render_to_string('mail_student.html', {'user':i,'clubname':club})
+                plain_message = strip_tags(html_message)
+                from_email = 'teamcosc555@gmail.com'
+                to = admin_emailid[0]['emailid']
+
+                send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
+                success=1
+            else:
+                success=0
+
         else:
-            success=0
-    if(success):
+            return HttpResponse(data['message'])
+    if(success==1):
         return HttpResponse("Success")
     else:
         return HttpResponse(admin_emailid["message"])
-
-    
 
 @never_cache
 def addevent(request):
@@ -475,43 +487,50 @@ def newevent(request):
     end = request.GET.get("end")
     coordinator = request.GET.get("coordinator")
     contact = request.GET.get("contact")
-    print(eventname,desc,date,type(date))
-    requests.post('http://localhost:5000/displaypostevents',data={'eventname':eventname,'eventdate':date,'clubname':club,'description':desc,'venue':venue,'start':start,'end':end,'coordinator':coordinator,'contact':contact},headers = {'Authorization':f'Bearer {admintoken}'})
-    return redirect(admin)
-
+    #print(eventname,desc,date,type(date))
+    response=requests.post('http://localhost:5000/displaypostevents',data={'eventname':eventname,'eventdate':date,'clubname':club,'description':desc,'venue':venue,'start':start,'end':end,'coordinator':coordinator,'contact':contact},headers = {'Authorization':f'Bearer {admintoken}'})
+    data=response.json()
+    if data is None:
+        return redirect(admin)
+    else:
+        return HttpResponse(data['message'])
 @never_cache
 def members(request):
     global admintoken
     club = request.session['club']
     response = requests.post('http://localhost:5000/clubmembers',data={'clubname':club},headers = {'Authorization':f'Bearer {admintoken}'})
     data = response.json()
-    for i in range(0,len(data)):
-        d=dict()
-        d['stuid']=data[i]['stuid']
-        d['name']=data[i]['name']
-        d['branch']=data[i]['branch']
-        d['crole']=data[i]['crole']
-        data[i] = d
-    return render(request,'members.html',{'data':data})
-
+    if 'message' not in data:
+        for i in range(0,len(data)):
+            d=dict()
+            d['stuid']=data[i]['stuid']
+            d['name']=data[i]['name']
+            d['branch']=data[i]['branch']
+            d['crole']=data[i]['crole']
+            data[i] = d
+        return render(request,'members.html',{'data':data})
+    else:
+        return HttpResponse(data['message'])
 @never_cache
 def deletemembers(request):
     global admintoken
     club = request.session['club']
     response = requests.post('http://localhost:5000/clubmembers',data={'clubname':club},headers = {'Authorization':f'Bearer {admintoken}'})
     data = response.json()
-    id=[]
-    for i in range(0,len(data)):
-        d=dict()
-        d['stuid']=data[i]['stuid']
-        d['name']=data[i]['name']
-        d['branch']=data[i]['branch']
-        d['crole']=data[i]['crole']
-        d['year']=data[i]['year']
-        data[i] = d
-        id.append(data[i]['stuid'])
-    return render(request,'deletemembers.html',{'data':data,'packed':zip(data,id)})
-
+    if 'message' not in data:
+        id=[]
+        for i in range(0,len(data)):
+            d=dict()
+            d['stuid']=data[i]['stuid']
+            d['name']=data[i]['name']
+            d['branch']=data[i]['branch']
+            d['crole']=data[i]['crole']
+            d['year']=data[i]['year']
+            data[i] = d
+            id.append(data[i]['stuid'])
+        return render(request,'deletemembers.html',{'data':data,'packed':zip(data,id)})
+    else:
+        return HttpResponse(data['message'])
 @never_cache
 def confirmdelmembers(request):
     global admintoken
@@ -519,26 +538,30 @@ def confirmdelmembers(request):
     dels = request.GET.getlist('delmembers')
     dels = list(map(int,dels))
     success=0
+    msg='message'
     for d in dels:
         response = requests.post('http://localhost:5000/delmembers',data={'clubname':club,'stuid':d},headers = {'Authorization':f'Bearer {admintoken}'})
-        response = requests.get('http://localhost:5000/mail',data={'userid':d},headers = {'Authorization':f'Bearer {admintoken}'})
-        admin_emailid=response.json()
-        if 'message' not in admin_emailid:
-            subject="You got removed from Club"
-            html_message = render_to_string('mail_delstudent.html', {'user': d,'clubname':club})
-            plain_message = strip_tags(html_message)
-            from_email = 'teamcosc555@gmail.com'
-            to = admin_emailid[0]['emailid']
-            send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
-            success=1
+        data=response.json()
+        if data is None:
+            response = requests.get('http://localhost:5000/mail',data={'userid':d},headers = {'Authorization':f'Bearer {admintoken}'})
+            admin_emailid=response.json()
+            if 'message' not in admin_emailid:
+                subject="You got removed from Club"
+                html_message = render_to_string('mail_delstudent.html', {'user': d,'clubname':club})
+                plain_message = strip_tags(html_message)
+                from_email = 'teamcosc555@gmail.com'
+                to = admin_emailid[0]['emailid']
+                send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
+                success=1
+            else:
+                success=0
         else:
-            success=0
-    if(success):
-        return HttpResponse("Success")
+            return HttpResponse(data['message'])
+    if(success==1):
+        return redirect(deletemembers)
     else:
         return HttpResponse(admin_emailid["message"])
 
-    return redirect(deletemembers)
 
 @never_cache
 def events(request):
@@ -546,11 +569,17 @@ def events(request):
     club = request.session['club']
     response = requests.get('http://localhost:5000/displaypostevents',data={'clubname':club})
     data=response.json()
-    print(data)
+
+    events = []
+    dates = []
     for i in range(0,len(data)):
         d=dict()
+
         d['eventname']=data[i]['eventname']
-        d['eventdate']=data[i]['eventdate']
+        events.append(d['eventname'])
+        d['eventdate']=data[i]['date_format(eventdate,"%Y-%m-%d")']
+        dates.append(d['eventdate'])
+
         d['description']=data[i]['description']
         d['venue']=data[i]['venue']
         d['start']=data[i]['time_format(start,"%T")']
@@ -558,6 +587,25 @@ def events(request):
         d['coordinator']=data[i]['coordinator']
         d['contact']=data[i]['contact']
         data[i] = d
-    return render(request,'events.html',{'data':data})
 
 
+    return render(request,'events.html',{'packed':zip(data,events,dates)})
+
+@never_cache
+def participants(request):
+    global admintoken
+    club = request.session['club']
+    event = request.GET.get('event')
+    date = request.GET.get('date')
+    print(date,type(date))
+    response = requests.get('http://localhost:5000/eventmembers',data={'clubname':club,'eventname':event,'eventdate':date})
+    data = response.json()
+    for i in range(0,len(data)):
+        d=dict()
+        d['stuid']=data[i]['stuid']
+        d['name']=data[i]['name']
+        d['branch']=data[i]['branch']
+        d['year']=data[i]['year']
+        data[i] = d
+
+    return render(request,'participants.html',{'data':data,'event':event})

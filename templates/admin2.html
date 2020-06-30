@@ -1,11 +1,11 @@
 {% extends "layout.html"%}
 
 {%block heading%}
-{ % if club % }
+{% if club %}
 <h1 class="text-emphasis-variant" style="font-family: fantasy;">{{club}} Club</h1><br><br>
-{%endblock%}
 {% endif %}
-{%block body %} 
+{%endblock%}
+{%block body %}
 
 {% if alert %}
       <p style="text-align: center;">Invalid Credentials</p>
