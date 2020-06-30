@@ -1,7 +1,7 @@
 {% extends "layout.html"%}
 
 {%block heading%}
-<h3 class="text-emphasis-variant">{{club}} Members</h3><br><br>
+<h3 class="text-emphasis-variant">Members</h3><br><br>
 {%endblock%}
 {%block body%}
 
@@ -30,12 +30,4 @@
 </center>
 </div>
 <br>
-<div>
-      <form action ="{% url 'confirmdelete' %}" >
-        
-          <button class="btn btn-primary btn-lg w-15" >Confirm</button><br><br>
-          <input type="hidden"  type="submit" name="admin_name" value="{{admin}}">
-       
-      </form>
-    </div>
-      {% endblock %}
+{% endblock %}
