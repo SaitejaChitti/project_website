@@ -1,11 +1,10 @@
 {% extends "layout.html"%}
 {% load static %}
 {%block heading%}
-<h1 class="text-emphasis-variant">Admin Page</h1><br><br>
-{%endblock%}
+<h1 class="text-emphasis-variant">ADMIN</h1><br><br>
+
 {%block body%}
-<!-- partial:index.partial.html -->
-<!-- Plug Bootstrap Nav Bar code here -->
+
      <nav class="navbar navbar-dark bg-dark navbar-expand-lg ">
       <a class="navbar-brand" href="#">
         <img  src="{% static 'cbit.png' %}"style="height:50px;" />
@@ -18,35 +17,33 @@
         <ul class="navbar-nav w-100">
           <li class="nav-item active">
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item dropdown ml-auto">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              More
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'forgetpassword' %}">Change password</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li>
+          </li></ul>
+          
+            <ul class = "navbar-nav w-50 text-right nav justify-content-end">
+            <li class="nav-item" style="float:right ;">
+          <a class="nav-link" href="{% url 'forgetpassword' %}">Change password</a></li>
+          <li class="nav-item" style="float:right;">
         <form class="form-inline my-2 my-lg-0" action="{% url 'delete_session' %}" name="admin">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="logout" value="alogout"><i class="fas fa-power-off"></i>&nbsp;  Logout</button>
         </form>
-      </div>
+      </li>
+      </ul>
+    </div>
+      
     </nav>
         <div class="jumbotron" style=" margin-right: 300px; margin-left: 300px; margin-top: 100px;">
 
       <div class="container text-center">
 
-    <a class="btn btn-primary w-50 text-left" href="{% url 'viewrequests' %}" role="button">&emsp;&emsp;<i class="fas fa-user-plus"></i>&emsp;  Accept Joining Requests.</a><br><br>
-    <a class="btn btn-primary w-50 text-left" href="{% url 'members' %}" role="button" >&emsp;&emsp;<i class="fas fa-tv"></i>&emsp;&emsp;  Display all members</a><br><br>
-    <a class="btn btn-primary w-50 text-left" href="{% url 'addevent' %}" role="button" >&emsp;&emsp;<i class="far fa-calendar-alt"></i>&emsp;&emsp;  Add event</a><br><br>
-    <a class="btn btn-primary w-50 text-left" href="{% url 'events' %}" role="button" >&emsp;&emsp;<i class="far fa-calendar-alt"></i>&emsp;&emsp;  Show all events</a><br><br>
-    <a class="btn btn-primary w-50 text-left" href="{% url 'deletemembers' %}" role="button" >&emsp;&emsp;<i class="fas fa-user-minus"></i>&emsp;&emsp;  Delete members.</a><br><br>
+   <a class="btn btn-primary w-50 text-left" href="{% url 'viewrequests' %}" role="button">&emsp;&emsp;<i class="fas fa-user-plus"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Accept Joining Requests</a><br><br>
+    <a class="btn btn-primary w-50 text-left" href="{% url 'members' %}" role="button" >&emsp;&emsp;<i class="fas fa-tv"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Display all members</a><br><br>
+    <a class="btn btn-primary w-50 text-left" href="{% url 'addevent' %}" role="button" >&emsp;&emsp;<i class="far fa-calendar-alt"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Add event</a><br><br>
+    <a class="btn btn-primary w-50 text-left" href="{% url 'events' %}" role="button" >&emsp;&emsp;<i class="far fa-calendar-alt"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  Show all events</a><br><br>
+    <a class="btn btn-primary w-50 text-left" href="{% url 'deletemembers' %}" role="button" >&emsp;&emsp;<i class="fas fa-user-minus"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Delete members</a><br><br>
     
 
     </div>
     </div>
     </div>
     {% endblock%}
+    {%endblock%}

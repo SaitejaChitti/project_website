@@ -25,6 +25,10 @@ ids=[]
 global sadmintoken
 global admintoken
 global params
+global tempclub
+global delclub
+
+delclub=0
 @never_cache
 def delete_session(request):
 
@@ -47,8 +51,9 @@ def delete_session(request):
 
             del request.session['userid']
             del request.session['password']
-            club=''
-            ids=[]
+            club=None
+            ids=None
+            tempclub=None
             del request.session['club']
             del request.session['ids']
             logout(request)
@@ -139,12 +144,15 @@ def adminlog(request):
     global alert2
     global flag2
     global deleteadmin
+    global tempclub
     '''try:
         a=request.session['userid']
         b=request.session['password']
         return render(request,'admin.html')'''
 
     club = request.GET.get('club')
+    if(club):
+        tempclub=club
     if(flag2==1):
         alert2 = 1
         flag2 = 0
@@ -159,6 +167,7 @@ def admin(request):
     global flag2
     global admintoken
     global club
+    global tempclub
     try:
         id3 = request.session['userid']
         a = admintoken
@@ -169,6 +178,7 @@ def admin(request):
             aid = int(request.POST["id"])
             apword = request.POST["pword"]
             club = request.POST["club_name"]
+            club = tempclub
             response  = requests.post('http://localhost:5000/adminlog',data={'userid':aid,'password':apword,'clubname':club})
             result = response.json()
             #print(result)
@@ -176,7 +186,7 @@ def admin(request):
             try:
 
                 admintoken=result['access_token']
-                print('hi')
+                #print('hi')
                 request.session['userid'] =aid
                 request.session['password']=apword
                 request.session['club']=club
@@ -185,6 +195,7 @@ def admin(request):
             except:
                 alert2 = 1
                 flag2 = 1
+
                 return redirect(adminlog)
         else:
             try:
@@ -252,7 +263,7 @@ def mailadmin(request):
         html_message = render_to_string('mail_admin.html', {'user': param['username'],'password':param['password'],'clubname':param['clubname']})
         plain_message = strip_tags(html_message)
         from_email = 'teamcosc555@gmail.com'
-        print(admin_emailid)
+        #print(admin_emailid)
         to = admin_emailid[0]['emailid']
         send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
         return HttpResponse("Success")
@@ -282,33 +293,45 @@ def deleteadmin(request):
         club_name =request.GET.get("club_name")
         #print(admin_name,club_name)
         global sadmintoken
-        response = requests.post('http://localhost:5000/clubmembers',data={'clubname':club_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
-        data = response.json()
-        #print(data)
-        if 'message' not in data:
-            for i in range(0,len(data)):
-                d=dict()
-                d['stuid']=data[i]['stuid']
-                d['name']=data[i]['name']
-                d['branch']=data[i]['branch']
-                d['crole']=data[i]['crole']
-                data[i] = d
-            #print(data)
-            return render(request,'confirmdelete.html',{'data':data,'club':club_name,'admin':admin_name})
+        global delclub
+    
+        if(delclub == 1):
+            delclub=0
+            return redirect(super_admin)
         else:
-            return HttpResponse(data['message'])
+             
+            response = requests.post('http://localhost:5000/clubmembers',data={'clubname':club_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
+            data = response.json()
+            #print(data)
+
+            if 'message' not in data:
+                for i in range(0,len(data)):
+                    d=dict()
+                    d['stuid']=data[i]['stuid']
+                    d['name']=data[i]['name']
+                    d['branch']=data[i]['branch']
+                    d['crole']=data[i]['crole']
+                    d['year'] = data[i]['year']
+                    data[i] = d
+                #print(data)
+                return render(request,'confirmdelete.html',{'data':data,'club':club_name,'admin':admin_name})
+            else:
+                return HttpResponse(data['message'])
     else:
         return redirect(index)
 @never_cache
 def confirmdelete(request):
+    global delclub
     if(request.session['suserid']):
 
 
         admin_name =request.GET.get("admin_name")
         global sadmintoken
+        global delclub
         response = requests.post('http://localhost:5000/del',data={'username':admin_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
         response=response.json()
         if (response['message']=="deleted"):
+            delclub = 1
             #print('message received')
             response = requests.get('http://localhost:5000/mail',data={'username':admin_name},headers = {'Authorization':f'Bearer {sadmintoken}'})
             admin_emailid=response.json()
@@ -446,22 +469,25 @@ def dealrequests(request):
         response=requests.post('http://localhost:5000/requesttoclub',data={'cid':0,'stuid':i,'clubname':club,'crole':'Member','acceptstatus':acceptstatus},headers = {'Authorization':f'Bearer {admintoken}'})
         data=response.json()
         if data is None:
+            if(acceptstatus==1):
 
-            response = requests.get('http://localhost:5000/mail',data={'userid':i},headers = {'Authorization':f'Bearer {admintoken}'})
+                response = requests.get('http://localhost:5000/mail',data={'userid':i},headers = {'Authorization':f'Bearer {admintoken}'})
 
-            admin_emailid = response.json()
-            if 'message' not in admin_emailid:
+                admin_emailid = response.json()
+                if 'message' not in admin_emailid:
 
-                subject="Congratulations you are added to "+club
-                html_message = render_to_string('mail_student.html', {'user':i,'clubname':club})
-                plain_message = strip_tags(html_message)
-                from_email = 'teamcosc555@gmail.com'
-                to = admin_emailid[0]['emailid']
+                    subject="Congratulations you are added to "+club
+                    html_message = render_to_string('mail_student.html', {'user':i,'clubname':club})
+                    plain_message = strip_tags(html_message)
+                    from_email = 'teamcosc555@gmail.com'
+                    to = admin_emailid[0]['emailid']
 
-                send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
-                success=1
+                    send_mail(subject, plain_message, from_email, [to], html_message=html_message,fail_silently=False)
+                    success=1
+                else:
+                    success=0
             else:
-                success=0
+                pass
 
         else:
             return HttpResponse(data['message'])
@@ -569,7 +595,7 @@ def events(request):
     club = request.session['club']
     response = requests.get('http://localhost:5000/displaypostevents',data={'clubname':club})
     data=response.json()
-
+    length=len(data)
     events = []
     dates = []
     for i in range(0,len(data)):
@@ -587,9 +613,8 @@ def events(request):
         d['coordinator']=data[i]['coordinator']
         d['contact']=data[i]['contact']
         data[i] = d
-
-
-    return render(request,'events.html',{'packed':zip(data,events,dates)})
+    
+    return render(request,'events.html',{'packed':zip(data,events,dates),'length':length})
 
 @never_cache
 def participants(request):
@@ -600,6 +625,7 @@ def participants(request):
     print(date,type(date))
     response = requests.get('http://localhost:5000/eventmembers',data={'clubname':club,'eventname':event,'eventdate':date})
     data = response.json()
+    length=len(data)
     for i in range(0,len(data)):
         d=dict()
         d['stuid']=data[i]['stuid']
@@ -608,4 +634,4 @@ def participants(request):
         d['year']=data[i]['year']
         data[i] = d
 
-    return render(request,'participants.html',{'data':data,'event':event})
+    return render(request,'participants.html',{'data':data,'event':event,'length':length})

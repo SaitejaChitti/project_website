@@ -2,24 +2,24 @@
 
 {%block heading%}
 <h3 class="text-emphasis-variant">Events</h3><br><br>
-{%endblock%}
+
 {%block body%}
 
 <div style="align-items: center;" class="container">
     <center>
-
-    <table class="table table-bordered" style="width:50% ; border: 2px solid grey">
+      {% if length %}
+    <table class="table" style="min-width:50% ; border: 2px solid grey">
 
       <thead>
         <tr style="background-color: dodgerblue; color: ghostwhite;">
-          <th style="text-align: center;"  class="col-1">Event Name</th>
-          <th style="text-align: center;" class="col-2">Event date</th>
-          <th style="text-align: center;" class="col-4">Description</th>
-          <th style="text-align: center;" class="col-1">Venue</th>
-          <th style="text-align: center;" class="col-1">Start Time</th>
-          <th style="text-align: center;" class="col-1">End Time</th>
-          <th style="text-align: center;" class="col-1">Coordinator</th>
-          <th style="text-align: center;" class="col-1">Contact</th>
+          <th style="text-align: center;width:20%"  >Event Name</th>
+          <th style="text-align: center;width:30%" >Event date</th>
+          <th style="text-align: center;width:50%" >Description</th>
+          <th style="text-align: center;" >Venue</th>
+          <th style="text-align: center;" >Start Time</th>
+          <th style="text-align: center;">End Time</th>
+          <th style="text-align: center;" >Coordinator</th>
+          <th style="text-align: center;" >Contact</th>
         </tr>
       </thead>
       <tbody>
@@ -33,7 +33,7 @@
         <input type="hidden" type="submit" value="{{a}}" name ="date">
             <input type="hidden" type="submit" value="{{j}}" name="event" >
 
-            <td><button type="submit" class= "btn" style="background-color: white;">{{v}}</button></td>
+            <td><button type="submit" class= "btn" style="background-color:transparent;">{{v}}</button></td>
           </form>
         {% endfor %}
 
@@ -42,8 +42,11 @@
     {% endfor %}
       </tbody>
 </table>
-
+{% else %}
+<h2>No events conducted by the club</h2>
+{% endif %}
 </center>
 </div>
 <br>
+{%endblock%}
 {% endblock %}

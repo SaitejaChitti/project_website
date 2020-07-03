@@ -1,13 +1,12 @@
 {% extends "layout.html"%}
 
 {%block heading%}
-<h1 class="text-emphasis-variant">Add an Admin</h1><br><br>
-{%endblock%}
-{%block body%}
-<a class="btn btn-primary " href="{% url 'super_admin'  %}" style="position: absolute;left:2%;top:1%" role="button" >Back</a>
-<div class="card" style="width: 18rem;align-items: center;position:absolute;left:41%">
-<div class="card-body" id="admin" >
-<h5 class="card-title">Admin details</h5>
+<h1 class="text-emphasis-variant">Add a Club</h1><br><br>
+ 
+{% block body %}
+<div class="card" style="width: 18rem;align-items: center;position:absolute;left:41%;top:20%;border:2px solid grey" >
+<div class="card-body" id="admin">
+<h5 class="card-title">Club details</h5>
 
 <form action ="{% url 'addadmins' %}" method="post" >
 {% csrf_token %}
@@ -28,4 +27,5 @@
 </div>
 </div>
 
-    {% endblock%}
+{% endblock %}
+{% endblock %}

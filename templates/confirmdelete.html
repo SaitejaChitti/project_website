@@ -1,19 +1,27 @@
+
 {% extends "layout.html"%}
+{% load static %}
+
 
 {%block heading%}
+
+
 <h3 class="text-emphasis-variant">{{club}} Members</h3><br><br>
-{%endblock%}
+
+
 {%block body%}
+
 
 <div style="align-items: center;" class="container">
     <center>
-    <table class="table table-bordered" style="width:50% ; border: 2px solid white">
+    <table class="table " style="width:50% ; border: 2px solid grey">
       <thead>
         <tr style="background-color: dodgerblue; color: ghostwhite;">
           <th style="text-align: center;">Student ID</th>
           <th style="text-align: center;">Name</th>
           <th style="text-align: center;">Branch</th>
           <th style="text-align: center;">Role</th>
+          <th style="text-align:center;">Year</th>
         </tr>
       </thead>
       <tbody>
@@ -33,9 +41,15 @@
 <div>
       <form action ="{% url 'confirmdelete' %}" >
         
-          <button class="btn btn-primary btn-lg w-15" >Confirm</button><br><br>
+          <button class="btn btn-primary btn-lg w-15" >Delete</button><br><br>
           <input type="hidden"  type="submit" name="admin_name" value="{{admin}}">
        
       </form>
     </div>
+
       {% endblock %}
+      
+    
+      {% endblock %}
+    
+

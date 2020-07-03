@@ -2,7 +2,7 @@
 
 
 {% block heading %}
-
+<div style="background-image: linear-gradient(to top, #30e2f7, #8ae7ff, #c3ebff, #ebf3ff, #ffffff);">
 
 <h1 style="color: goldenrod; font-family:'Times New Roman', Times, serif ;text-align:center;">CHAITANYA BHARATHI INSTITUTE OF TECHNOLOGY</h1>
 <h5 style="text-underline-position: auto;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;text-align:center;">
@@ -10,7 +10,7 @@ Kokapet(Village),Gandipet,Hyderabad,Telangana-500075,www.cbit.ac.in</h5>
 
 <h2 style="text-underline-position: auto;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;text-align:center;">
 <b>ADMIN SITE FOR CBIT CLUBS</b></h2>
-{% endblock%}
+
 {% block body %}
 
 <script>
@@ -32,7 +32,7 @@ Kokapet(Village),Gandipet,Hyderabad,Telangana-500075,www.cbit.ac.in</h5>
     
     <div class="container" style="margin: auto; width: 40%; margin-top: 100px;">
       
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 18rem; border:2px solid grey">
         <button type="button" class="btn btn-primary btn-lg"  id="sadminbutton" onclick='display("sadminbutton");' >Super-Admin</button>
   <div class="card-body" id="sadmin" style="display:none">
     
@@ -42,7 +42,7 @@ Kokapet(Village),Gandipet,Hyderabad,Telangana-500075,www.cbit.ac.in</h5>
       {% csrf_token %}
   <div class="form-group">
     <label for="exampleInputEmail1">ID</label>
-    <input type="text" class="form-control" required id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter id" name="sid">
+    <input type="text" class="form-control" required id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter name" name="sid">
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Password</label>
@@ -70,7 +70,7 @@ Kokapet(Village),Gandipet,Hyderabad,Telangana-500075,www.cbit.ac.in</h5>
   </div>
   <div class="col-md-5">
   	<div class="container" style="margin: auto; width: 70%; margin-top: 100px;">
-        <div class="card" style="width: 18rem;">
+        <div class="card" style="width: 18rem;border:2px solid grey">
             <button type="button" class="btn btn-primary btn-lg"  id="adminbutton" onclick="display('adminbutton');" >Admin</button>
   <div class="card-body" id="admin" style="display: none;">
     
@@ -92,3 +92,5 @@ Kokapet(Village),Gandipet,Hyderabad,Telangana-500075,www.cbit.ac.in</h5>
 </div>
 
 {% endblock %}
+</div>
+{% endblock%}

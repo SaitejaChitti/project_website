@@ -4,21 +4,21 @@
 {% if club %}
 <h1 class="text-emphasis-variant" style="font-family: fantasy;">{{club}} Club</h1><br><br>
 {% endif %}
-{%endblock%}
+
 {%block body %}
 
 {% if alert %}
       <p style="text-align: center;">Invalid Credentials</p>
 {% endif %}
 
-<a class="btn btn-primary " href="{% url 'index'  %}" style="position: absolute;left:2%;top:1%" role="button" >Back</a>
+
 <div class="card" style="width: 18rem;align-items: center;position:absolute;left:41%">
 <div class="card-body" id="admin" >
 <h5 class="card-title">Admin Login</h5>
 <form action ="admin/" method="post" >
 {% csrf_token %}
 <div class="form-group">
-<label for="exampleInputEmail1">Name</label>
+<label for="exampleInputEmail1">ID</label>
 <input required type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter ID" name="id">
 </div>
 <div class="form-group">
@@ -33,3 +33,4 @@
 </div>
 
 {% endblock %}
+{%endblock%}

@@ -3,8 +3,8 @@
 
 
 {%block heading%}
-<h1 class="text-emphasis-variant">Super-Admin Page</h1><br><br>
-{%endblock%}
+<h1 class="text-emphasis-variant">SUPER ADMIN</h1><br><br>
+
 {%block body%}
 <!-- partial:index.partial.html -->
 <!-- Plug Bootstrap Nav Bar code here -->
@@ -21,29 +21,21 @@
           <li class="nav-item active">
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item dropdown ml-auto">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li>
+          </ul><ul class = "nav justify-content-end">
         <form class="form-inline my-2 my-lg-0 action=" action="{% url 'delete_session' %}" >
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value="slogout" name="logout">Logout</button>
         </form>
+      </ul>
       </div>
     </nav>
-<div class="jumbotron" style=" margin-right: 200px; margin-left: 200px; margin-top: 100px;">
-  	<div class="container text-center">
-    <a class="btn btn-primary w-50 text-left" href="{% url 'addadmin'  %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-users-cog"></i>&emsp;&emsp;&emsp;Add a Club.</a><br><br>
-    <a class="btn btn-primary w-50 text-left" href="{% url 'viewadmin' %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-tv"></i>&emsp;&emsp;&emsp;Display all admins</a><br><br>
-    <a class="btn btn-primary w-50 text-left" href="{% url 'deladmin' %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-users-slash"></i>&emsp;&emsp;&emsp;Delete a Club.</a><br><br>
-    <a class="btn btn-primary w-50 text-left" href="{% url 'checkclub' %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-users"></i>&emsp;&emsp;&emsp;Check out a specific club</a><br><br>
+<div class="jumbotron" style=" margin-right: 200px; margin-left: 200px; margin-top: 100px; background-image: linear-gradient(to top, #30e2f7, #8ae7ff, #c3ebff, #ebf3ff, #ffffff);">
+  	<div class="container text-center" style="align-items: center;">
+    <a class="btn btn-primary w-50 text-left" href="{% url 'addadmin'  %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-users-cog"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Add a Club</a><br><br>
+    <a class="btn btn-primary w-50 text-left" href="{% url 'viewadmin' %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-tv"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Display all clubs</a><br><br>
+    <a class="btn btn-primary w-50 text-left" href="{% url 'deladmin' %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-users-slash">&emsp;</i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Delete a Club.</a><br><br>
+    <a class="btn btn-primary w-50 text-left" href="{% url 'checkclub' %}" role="button" >&emsp;&emsp;&emsp;<i class="fas fa-users"></i>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Check out a specific club</a><br><br>
     </div>
-    </div>
-
+   
+</div>
     {% endblock%}
+    {%endblock%}
